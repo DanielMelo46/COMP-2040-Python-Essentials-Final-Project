@@ -35,7 +35,7 @@ def plot_categorical_value_counts(df, categorical_cols):
         fig.delaxes(axes[j])
     return fig
 
-def plot_categorical_proportions(df, categorical_cols, target_col):
+def plot_categorical_proportions(df, categorical_cols, target_col, palette="husl"):
     """
     Plots the proportions for each categorical column in a DataFrame.
     
@@ -43,23 +43,21 @@ def plot_categorical_proportions(df, categorical_cols, target_col):
     df (pandas.DataFrame): The DataFrame containing the categorical columns.
     categorical_cols (list): List of column names to plot.
     """
-    sns.set_palette("husl")
+    palette = sns.color_palette(palette)
 
     for col in categorical_cols:
-        # Create contingency table with normalized values (percentages)
         contingency_table = pd.crosstab(df[col], df[target_col], normalize='index')
         
-        # Set style
         sns.set_theme(style="whitegrid")
         
-        # Create stacked bar plot
+        # Pass palette colors to Pandas plot
         ax = contingency_table.plot(
             kind="bar",
             stacked=True,
-            figsize=(20, 4)
+            figsize=(20, 4),
+            color=palette
         )
         
-        # Customize plot
         ax.set_title(f"Percentage Distribution of {target_col} across {col}")
         ax.set_xlabel(col)
         ax.set_ylabel("Percentage")
@@ -67,3 +65,4 @@ def plot_categorical_proportions(df, categorical_cols, target_col):
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         plt.show()
+
