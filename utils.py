@@ -35,7 +35,7 @@ def plot_categorical_value_counts(df, categorical_cols):
         fig.delaxes(axes[j])
     return fig
 
-def plot_categorical_proportions(df, categorical_cols, target_col, palette="husl"):
+def plot_categorical_proportions(df, categorical_cols, target_col, palette="husl", sort_by=None, ascending=False):
     """
     Plots the proportions for each categorical column in a DataFrame.
     
@@ -47,7 +47,12 @@ def plot_categorical_proportions(df, categorical_cols, target_col, palette="husl
 
     for col in categorical_cols:
         contingency_table = pd.crosstab(df[col], df[target_col], normalize='index')
-        
+        # Decide which column to sort by
+        sort_col = sort_by if sort_by in contingency_table.columns else contingency_table.columns[0]
+
+        # Sort by chosen column
+        contingency_table = contingency_table.sort_values(by=sort_col, ascending=ascending)
+
         sns.set_theme(style="whitegrid")
         
         # Pass palette colors to Pandas plot
